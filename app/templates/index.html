@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<section class="hero" data-aos="fade-up">
+    <div class="hero-eyebrow">
+        <i class="bi bi-stars"></i> Machine Learning Platform
+    </div>
+    <h1>Employee Intelligence<br><span class="gradient-text">Powered by AI</span></h1>
+    <p>Platform prediksi performa dan retensi karyawan menggunakan 5 model Machine Learning — ANN, RNN, Backpropagation, Linear Regression &amp; K-Means.</p>
+    <div class="hero-actions">
+        <a href="/predict" class="btn-ai btn-ai-primary">
+            <i class="bi bi-cpu-fill"></i> Mulai Prediksi
+        </a>
+        <a href="/compare" class="btn-ai btn-ai-outline">
+            <i class="bi bi-bar-chart-steps"></i> Lihat Model
+        </a>
+    </div>
+</section>
+
+<!-- ══ STAT CARDS ════════════════════════════════════════════════════ -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="50">
+        <div class="stat-card" style="--card-accent: #6366f1;">
+            <div class="stat-icon" style="background: rgba(99,102,241,.12); color: #6366f1;">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <div class="stat-label">Total Karyawan</div>
+                <div class="stat-value" style="color:#6366f1;">{{ "{:,}".format(total_records) }}</div>
+                <div class="stat-sub">baris dataset</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-card" style="--card-accent: #10b981;">
+            <div class="stat-icon" style="background: rgba(16,185,129,.12); color: #10b981;">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <div>
+                <div class="stat-label">Akurasi ANN</div>
+                <div class="stat-value" style="color:#10b981;">94%</div>
+                <div class="stat-sub">R² score</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="150">
+        <div class="stat-card" style="--card-accent: #f59e0b;">
+            <div class="stat-icon" style="background: rgba(245,158,11,.12); color: #f59e0b;">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <div>
+                <div class="stat-label">Akurasi Backprop</div>
+                <div class="stat-value" style="color:#f59e0b;">87%</div>
+                <div class="stat-sub">klasifikasi resign</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-card" style="--card-accent: #06b6d4;">
+            <div class="stat-icon" style="background: rgba(6,182,212,.12); color: #06b6d4;">
+                <i class="bi bi-cpu"></i>
+            </div>
+            <div>
+                <div class="stat-label">Total Model</div>
+                <div class="stat-value" style="color:#06b6d4;">5</div>
+                <div class="stat-sub">ML models aktif</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ FEATURE GRID ══════════════════════════════════════════════════ -->
+<h2 class="section-title" data-aos="fade-up"><i class="bi bi-grid"></i> Fitur Utama</h2>
+<div class="feature-grid">
+    <div class="feature-card" data-aos="zoom-in" data-aos-delay="50"
+         style="--card-glow: rgba(99,102,241,.1);">
+        <div class="fc-icon" style="background: rgba(99,102,241,.1); color: #6366f1;">
+            <i class="bi bi-person-bounding-box"></i>
+        </div>
+        <h4>Prediksi Retensi</h4>
+        <p>Deteksi dini karyawan yang berpotensi resign menggunakan model Backpropagation Neural Network.</p>
+    </div>
+    <div class="feature-card" data-aos="zoom-in" data-aos-delay="100"
+         style="--card-glow: rgba(16,185,129,.1);">
+        <div class="fc-icon" style="background: rgba(16,185,129,.1); color: #10b981;">
+            <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <h4>Prediksi Produktivitas</h4>
+        <p>Estimasi skor performa karyawan menggunakan ANN, RNN, dan Linear Regression dalam mode ensemble.</p>
+    </div>
+    <div class="feature-card" data-aos="zoom-in" data-aos-delay="150"
+         style="--card-glow: rgba(6,182,212,.1);">
+        <div class="fc-icon" style="background: rgba(6,182,212,.1); color: #06b6d4;">
+            <i class="bi bi-pie-chart-fill"></i>
+        </div>
+        <h4>Segmentasi K-Means</h4>
+        <p>Pengelompokan otomatis karyawan ke dalam cluster High Performer, Average, dan At-Risk.</p>
+    </div>
+    <div class="feature-card" data-aos="zoom-in" data-aos-delay="200"
+         style="--card-glow: rgba(245,158,11,.1);">
+        <div class="fc-icon" style="background: rgba(245,158,11,.1); color: #f59e0b;">
+            <i class="bi bi-bar-chart-steps"></i>
+        </div>
+        <h4>Perbandingan Model</h4>
+        <p>Visualisasi interaktif metrik MAE, RMSE, R², dan akurasi antar model untuk evaluasi komprehensif.</p>
+    </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══════════════════════════════════════════════════ -->
+<div class="card-ai mt-4" data-aos="fade-up">
+    <div class="card-body" style="padding: 36px;">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-5">
+                <div class="page-badge"><i class="bi bi-info-circle-fill"></i> Cara Kerja</div>
+                <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 14px;">
+                    Prediksi Cerdas dalam 3 Langkah
+                </h2>
+                <p style="color: var(--text-muted); font-size: .9rem; line-height: 1.8;">
+                    Sistem kami menggunakan pipeline ML end-to-end: mulai dari preprocessing data, inference multi-model, hingga agregasi hasil prediksi dan insight berbasis aturan.
+                </p>
+                <a href="/predict" class="btn-ai btn-ai-primary mt-4">
+                    <i class="bi bi-play-fill"></i> Coba Sekarang
+                </a>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div style="text-align:center; padding: 20px 16px; background: var(--bg-subtle); border-radius: var(--radius-md);">
+                            <div style="width:48px; height:48px; background: linear-gradient(135deg, #6366f1, #818cf8); border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 12px; color:#fff; font-size:1.2rem;">1</div>
+                            <h6 style="font-weight:700; font-size:.85rem; margin-bottom:6px;">Input Data</h6>
+                            <p style="font-size:.78rem; color: var(--text-muted);">Isi usia, gaji, jam kerja, dan masa kerja karyawan.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="text-align:center; padding: 20px 16px; background: var(--bg-subtle); border-radius: var(--radius-md);">
+                            <div style="width:48px; height:48px; background: linear-gradient(135deg, #06b6d4, #0891b2); border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 12px; color:#fff; font-size:1.2rem;">2</div>
+                            <h6 style="font-weight:700; font-size:.85rem; margin-bottom:6px;">Proses AI</h6>
+                            <p style="font-size:.78rem; color: var(--text-muted);">5 model ML memproses data secara paralel.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="text-align:center; padding: 20px 16px; background: var(--bg-subtle); border-radius: var(--radius-md);">
+                            <div style="width:48px; height:48px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 12px; color:#fff; font-size:1.2rem;">3</div>
+                            <h6 style="font-weight:700; font-size:.85rem; margin-bottom:6px;">Hasil &amp; Insight</h6>
+                            <p style="font-size:.78rem; color: var(--text-muted);">Tampilkan prediksi lengkap dengan confidence dan cluster.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

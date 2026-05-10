@@ -1,0 +1,424 @@
+{% extends "layout.html" %}
+{% block title %}Perbandingan Model{% endblock %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-up">
+    <div class="page-badge"><i class="bi bi-bar-chart-steps"></i> Model Evaluation</div>
+    <h1>Perbandingan Performa Model</h1>
+    <p>Analisis lengkap dari 5 model Machine Learning yang dilatih untuk prediksi performa dan retensi karyawan dengan dataset 100k+ records.</p>
+</div>
+
+<!-- ══ METRICS SUMMARY ════════════════════════════════════════════════ -->
+<div class="card-ai mb-4" data-aos="fade-up">
+    <div class="card-body">
+        <h2 class="section-title"><i class="bi bi-table"></i> Ringkasan Performa Model</h2>
+        <div style="overflow-x:auto;">
+            <table class="table-ai">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th style="color:#2563eb;">MAE <span style="font-size:.75rem;">↓</span></th>
+                        <th style="color:#06b6d4;">RMSE <span style="font-size:.75rem;">↓</span></th>
+                        <th style="color:#10b981;">R² Score <span style="font-size:.75rem;">↑</span></th>
+                        <th style="color:#f59e0b;">Akurasi <span style="font-size:.75rem;">↑</span></th>
+                        <th style="color:#6366f1;">Tugas</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RNN/LSTM</strong> <span style="font-size:.75rem; color:var(--text-muted);">(Recurrent Neural Network)</span></td>
+                        <td><span class="metric-pill metric-best">0.0128</span></td>
+                        <td><span class="metric-pill metric-best">0.0176</span></td>
+                        <td><span class="metric-pill metric-best">—</span></td>
+                        <td>—</td>
+                        <td style="color:var(--text-muted); font-size:.82rem;">Regresi Produktivitas</td>
+                        <td>🥇 Terbaik</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ANN</strong> <span style="font-size:.75rem; color:var(--text-muted);">(Artificial Neural Network)</span></td>
+                        <td><span class="metric-pill metric-mid">0.1531</span></td>
+                        <td><span class="metric-pill metric-mid">0.1872</span></td>
+                        <td><span class="metric-pill metric-mid">—</span></td>
+                        <td>—</td>
+                        <td style="color:var(--text-muted); font-size:.82rem;">Regresi Produktivitas</td>
+                        <td>🥈 Kedua</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Linear Regression</strong> <span style="font-size:.75rem; color:var(--text-muted);">(Baseline)</span></td>
+                        <td><span class="metric-pill metric-worst">0.1875</span></td>
+                        <td><span class="metric-pill metric-worst">0.2532</span></td>
+                        <td><span class="metric-pill metric-worst">0.9679</span></td>
+                        <td>—</td>
+                        <td style="color:var(--text-muted); font-size:.82rem;">Regresi Baseline</td>
+                        <td>🥉 Baseline</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backpropagation</strong> <span style="font-size:.75rem; color:var(--text-muted);">(Binary Classification)</span></td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td><span class="metric-pill metric-best">90.14%</span></td>
+                        <td style="color:var(--text-muted); font-size:.82rem;">Klasifikasi Resign</td>
+                        <td>✅ Excellent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>K-Means</strong> <span style="font-size:.75rem; color:var(--text-muted);">(Unsupervised)</span></td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td style="color:var(--text-muted); font-size:.82rem;">Clustering (k=3)</td>
+                        <td>📊 Segmentasi</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size:.78rem; color: var(--text-muted); margin-top:12px; margin-bottom:0;">
+            <i class="bi bi-info-circle"></i> <strong>↓ = lebih rendah lebih baik</strong> (MAE, RMSE) &nbsp;|&nbsp; <strong>↑ = lebih tinggi lebih baik</strong> (R², Akurasi) &nbsp;|&nbsp; Semua metrik diukur pada test set.
+        </p>
+    </div>
+</div>
+
+<!-- ══ CHARTS ROW 1 ════════════────────────────────────────────────── -->
+<div class="row g-4 mb-4">
+    <!-- MAE & RMSE Comparison -->
+    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="60">
+        <div class="card-ai h-100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-bar-chart-fill"></i> MAE &amp; RMSE — Akurasi Model Regresi</h2>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="maeRmseChart"></canvas>
+                </div>
+                <p style="font-size:.78rem; color:var(--text-muted); text-align:center; margin-top:12px;">
+                    <i class="bi bi-info-circle"></i> Semakin rendah MAE &amp; RMSE, semakin akurat prediksi model. RNN/LSTM menunjukkan performa terbaik.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- R² Score (Goodness of Fit) -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-ai h-100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-trophy-fill"></i> R² Score</h2>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="r2Chart"></canvas>
+                </div>
+                <p style="font-size:.78rem; color:var(--text-muted); text-align:center; margin-top:12px;">
+                    <i class="bi bi-info-circle"></i> R² mendekati 1.0 = Sempurna. Linear Regression (0.9679) sangat bagus untuk regresi.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ CHARTS ROW 2 ════════────────────────────────────────────────── -->
+<div class="row g-4 mb-4">
+    <!-- Classification Accuracy -->
+    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="80">
+        <div class="card-ai h-100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-percent"></i> Akurasi Klasifikasi</h2>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+                <p style="font-size:.78rem; color:var(--text-muted); text-align:center; margin-top:12px;">
+                    Model Backpropagation mencapai 90.14% akurasi dalam prediksi resign karyawan.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- K-Means Clustering Visualization -->
+    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="140">
+        <div class="card-ai h-100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-diagram-3-fill"></i> K-Means Segmentasi (k=3)</h2>
+                <div style="position: relative; height: 280px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="kmeansChart"></canvas>
+                </div>
+                <p style="font-size:.78rem; color:var(--text-muted); text-align:center; margin-top:12px;">
+                    Silhouette Score: <strong>0.42</strong> — Karyawan tersegmentasi menjadi 3 cluster (HP / Average / At-Risk).
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODEL DETAIL CARDS ═════════════════════════════════════════════ -->
+<h2 class="section-title" data-aos="fade-up"><i class="bi bi-grid-3x3-gap-fill"></i> Arsitektur &amp; Hyperparameter Model</h2>
+<div class="row g-3">
+    <!-- Model 1: ANN -->
+    <div class="col-md-6 col-xl-4" data-aos="zoom-in" data-aos-delay="50">
+        <div class="model-card">
+            <div class="model-card-header">
+                <i class="model-icon bi bi-diagram-3-fill"></i>
+                <div>
+                    <h5>Artificial Neural Network</h5>
+                    <small style="color:rgba(255,255,255,.7); font-size:.75rem;">🥈 Kedua Terbaik</small>
+                </div>
+            </div>
+            <div class="model-card-body">
+                <div class="metric-row"><span class="metric-key">Arsitektur</span><span class="metric-val">128 → 64 → 32 → 1</span></div>
+                <div class="metric-row"><span class="metric-key">Aktivasi</span><span class="metric-val">ReLU + Linear</span></div>
+                <div class="metric-row"><span class="metric-key">Dropout</span><span class="metric-val">0.2 & 0.1</span></div>
+                <div class="metric-row"><span class="metric-key">Optimizer</span><span class="metric-val">Adam</span></div>
+                <div class="metric-row"><span class="metric-key">Loss Function</span><span class="metric-val">MSE</span></div>
+                <div class="metric-row"><span class="metric-key">Batch Size</span><span class="metric-val">128</span></div>
+                <div class="metric-row"><span class="metric-key">Early Stop</span><span class="metric-val">Patience=5</span></div>
+                <div class="metric-row" style="border-top:1px solid rgba(255,255,255,.1); padding-top:8px; margin-top:8px;">
+                    <span class="metric-key"><strong>MAE</strong></span><span class="metric-val" style="color:#f59e0b;"><strong>0.1531</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>RMSE</strong></span><span class="metric-val" style="color:#f59e0b;"><strong>0.1872</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>R² Score</strong></span><span class="metric-val" style="color:#f59e0b;"><strong>—</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model 2: RNN/LSTM -->
+    <div class="col-md-6 col-xl-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="model-card">
+            <div class="model-card-header">
+                <i class="model-icon bi bi-recycle"></i>
+                <div>
+                    <h5>Recurrent Neural Network</h5>
+                    <small style="color:rgba(255,255,255,.7); font-size:.75rem;">🥇 Terbaik untuk Regresi</small>
+                </div>
+            </div>
+            <div class="model-card-body">
+                <div class="metric-row"><span class="metric-key">Arsitektur</span><span class="metric-val">LSTM(64) → LSTM(32) → 16 → 1</span></div>
+                <div class="metric-row"><span class="metric-key">Aktivasi</span><span class="metric-val">Tanh + ReLU</span></div>
+                <div class="metric-row"><span class="metric-key">Dropout</span><span class="metric-val">0.2 & 0.1</span></div>
+                <div class="metric-row"><span class="metric-key">Optimizer</span><span class="metric-val">Adam</span></div>
+                <div class="metric-row"><span class="metric-key">Loss Function</span><span class="metric-val">MSE</span></div>
+                <div class="metric-row"><span class="metric-key">Time Steps</span><span class="metric-val">1</span></div>
+                <div class="metric-row"><span class="metric-key">Early Stop</span><span class="metric-val">Patience=5</span></div>
+                <div class="metric-row" style="border-top:1px solid rgba(255,255,255,.1); padding-top:8px; margin-top:8px;">
+                    <span class="metric-key"><strong>MAE</strong></span><span class="metric-val" style="color:#10b981;"><strong>0.0128</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>RMSE</strong></span><span class="metric-val" style="color:#10b981;"><strong>0.0176</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>MAPE</strong></span><span class="metric-val" style="color:#10b981;"><strong>0.0047</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model 3: Backpropagation -->
+    <div class="col-md-6 col-xl-4" data-aos="zoom-in" data-aos-delay="150">
+        <div class="model-card">
+            <div class="model-card-header">
+                <i class="model-icon bi bi-arrow-repeat"></i>
+                <div>
+                    <h5>Backpropagation Classifier</h5>
+                    <small style="color:rgba(255,255,255,.7); font-size:.75rem;">✅ Klasifikasi Resign</small>
+                </div>
+            </div>
+            <div class="model-card-body">
+                <div class="metric-row"><span class="metric-key">Arsitektur</span><span class="metric-val">128 → 64 → 32 → 1</span></div>
+                <div class="metric-row"><span class="metric-key">Aktivasi</span><span class="metric-val">Tanh → ReLU → ReLU → Sigmoid</span></div>
+                <div class="metric-row"><span class="metric-key">Dropout</span><span class="metric-val">0.3</span></div>
+                <div class="metric-row"><span class="metric-key">Optimizer</span><span class="metric-val">Adam</span></div>
+                <div class="metric-row"><span class="metric-key">Loss Function</span><span class="metric-val">Binary Crossentropy</span></div>
+                <div class="metric-row"><span class="metric-key">Batch Size</span><span class="metric-val">64</span></div>
+                <div class="metric-row"><span class="metric-key">Early Stop</span><span class="metric-val">Patience=5</span></div>
+                <div class="metric-row" style="border-top:1px solid rgba(255,255,255,.1); padding-top:8px; margin-top:8px;">
+                    <span class="metric-key"><strong>Akurasi</strong></span><span class="metric-val" style="color:#10b981;"><strong>90.14%</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>Tugas</strong></span><span class="metric-val">Pred. Resign</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>Output</strong></span><span class="metric-val">Binary (0/1)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model 4: Linear Regression -->
+    <div class="col-md-6 col-xl-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="model-card">
+            <div class="model-card-header">
+                <i class="model-icon bi bi-graph-up"></i>
+                <div>
+                    <h5>Linear Regression</h5>
+                    <small style="color:rgba(255,255,255,.7); font-size:.75rem;">🥉 Baseline Model</small>
+                </div>
+            </div>
+            <div class="model-card-body">
+                <div class="metric-row"><span class="metric-key">Tipe</span><span class="metric-val">OLS (Ordinary Least Squares)</span></div>
+                <div class="metric-row"><span class="metric-key">Library</span><span class="metric-val">Scikit-Learn</span></div>
+                <div class="metric-row"><span class="metric-key">Normalisasi</span><span class="metric-val">StandardScaler</span></div>
+                <div class="metric-row"><span class="metric-key">Interpretasi</span><span class="metric-val">Sangat Transparan</span></div>
+                <div class="metric-row"><span class="metric-key">Training Time</span><span class="metric-val">&lt; 1 detik</span></div>
+                <div class="metric-row"><span class="metric-key">Kompleksitas</span><span class="metric-val">O(n²)</span></div>
+                <div class="metric-row"><span class="metric-key">Keunggulan</span><span class="metric-val">Cepat &amp; Mudah</span></div>
+                <div class="metric-row" style="border-top:1px solid rgba(255,255,255,.1); padding-top:8px; margin-top:8px;">
+                    <span class="metric-key"><strong>MAE</strong></span><span class="metric-val" style="color:#ef4444;"><strong>0.1875</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>RMSE</strong></span><span class="metric-val" style="color:#ef4444;"><strong>0.2532</strong></span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-key"><strong>R² Score</strong></span><span class="metric-val" style="color:#ef4444;"><strong>0.9679</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model 5: K-Means -->
+    <div class="col-md-6 col-xl-4" data-aos="zoom-in" data-aos-delay="250">
+        <div class="model-card">
+            <div class="model-card-header">
+                <i class="model-icon bi bi-diagram-2-fill"></i>
+                <div>
+                    <h5>K-Means Clustering</h5>
+                    <small style="color:rgba(255,255,255,.7); font-size:.75rem;">📊 Unsupervised Segmentation</small>
+                </div>
+            </div>
+            <div class="model-card-body">
+                <div class="metric-row"><span class="metric-key">Algoritma</span><span class="metric-val">K-Means dengan Elbow</span></div>
+                <div class="metric-row"><span class="metric-key">K (Clusters)</span><span class="metric-val">3</span></div>
+                <div class="metric-row"><span class="metric-key">n_init</span><span class="metric-val">10</span></div>
+                <div class="metric-row"><span class="metric-key">random_state</span><span class="metric-val">42</span></div>
+                <div class="metric-row"><span class="metric-key">Library</span><span class="metric-val">Scikit-Learn</span></div>
+                <div class="metric-row"><span class="metric-key">Tujuan</span><span class="metric-val">Segmentasi Karyawan</span></div>
+                <div class="metric-row"><span class="metric-key">Cluster Names</span><span class="metric-val">Cluster 0 / 1 / 2</span></div>
+                <div class="metric-row" style="border-top:1px solid rgba(255,255,255,.1); padding-top:8px; margin-top:8px;">
+                    <span class="metric-key"><strong>Total Data</strong></span><span class="metric-val" style="color:#6366f1;"><strong>100,000</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const isDark  = document.documentElement.getAttribute('data-theme') === 'dark';
+const txtCol  = isDark ? '#8b949e' : '#64748b';
+const gridCol = isDark ? '#30363d' : '#e2e8f0';
+
+Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+
+// ── 1. MAE & RMSE Grouped Bar ──
+new Chart(document.getElementById('maeRmseChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Linear Regression', 'ANN', 'RNN'],
+        datasets: [
+            {
+                label: 'MAE',
+                data: [0.1875, 0.1531, 0.0128],
+                backgroundColor: 'rgba(99,102,241,.75)',
+                borderRadius: 5, borderSkipped: false,
+            },
+            {
+                label: 'RMSE',
+                data: [0.2532, 0.1872, 0.0176],
+                backgroundColor: 'rgba(6,182,212,.75)',
+                borderRadius: 5, borderSkipped: false,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { labels: { color: txtCol, padding: 20 } },
+            tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + ctx.raw } }
+        },
+        scales: {
+            y: { beginAtZero: true, ticks: { color: txtCol }, grid: { color: gridCol } },
+            x: { ticks: { color: txtCol }, grid: { display: false } }
+        }
+    }
+});
+
+// ── 2. R² Score Bar ──
+new Chart(document.getElementById('r2Chart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Linear Regression'],
+        datasets: [{
+            label: 'R² Score',
+            data: [0.9679],
+            backgroundColor: ['rgba(245,158,11,.75)'],
+            borderRadius: 6, borderSkipped: false,
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' R²: ' + ctx.raw } }
+        },
+        scales: {
+            x: { beginAtZero: true, max: 1.0, ticks: { color: txtCol }, grid: { color: gridCol } },
+            y: { ticks: { color: txtCol }, grid: { display: false } }
+        }
+    }
+});
+
+// ── 3. Akurasi Klasifikasi ──
+new Chart(document.getElementById('accuracyChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: ['Backpropagation'],
+        datasets: [{
+            label: 'Akurasi',
+            data: [90.14],
+            backgroundColor: 'rgba(16,185,129,.8)',
+            borderRadius: 8, borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' Akurasi: ' + ctx.raw + '%' } }
+        },
+        scales: {
+            y: { beginAtZero: true, max: 100, ticks: { color: txtCol, callback: v => v + '%' }, grid: { color: gridCol } },
+            x: { ticks: { color: txtCol }, grid: { display: false } }
+        }
+    }
+});
+
+// ── 4. K-Means Cluster Distribution ──
+new Chart(document.getElementById('kmeansChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Cluster 0', 'Cluster 1', 'Cluster 2'],
+        datasets: [{
+            data: [32, 53, 15],
+            backgroundColor: [
+                'rgba(16,185,129,.8)',
+                'rgba(99,102,241,.8)',
+                'rgba(239,68,68,.8)'
+            ],
+            borderWidth: 0,
+            hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom', labels: { color: txtCol, padding: 16, font: { size: 12 } } }
+        },
+        cutout: '68%'
+    }
+});
+</script>
+{% endblock %}

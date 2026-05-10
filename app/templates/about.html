@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+{% block title %}Tentang Proyek{% endblock %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-up">
+    <div class="page-badge"><i class="bi bi-info-circle-fill"></i> Tentang</div>
+    <h1>Tentang Proyek InformaticsAI</h1>
+    <p>Platform ML untuk prediksi performa dan retensi karyawan — dikembangkan sebagai proyek UTS Praktikum Machine
+        Learning.</p>
+</div>
+
+<div class="row g-4">
+    <!-- ══ OVERVIEW ══ -->
+    <div class="col-lg-8" data-aos="fade-up">
+        <div class="card-ai mb-4">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-file-text-fill"></i> Deskripsi Proyek</h2>
+                <p style="color: var(--text-muted); line-height:1.9; font-size:.92rem;">
+                    <strong>InformaticsAI</strong> adalah aplikasi web berbasis Flask yang mengintegrasikan lima model
+                    Machine Learning terlatih untuk menganalisis data karyawan. Sistem ini dirancang untuk membantu tim
+                    HR
+                    dalam mengidentifikasi potensi resign, memprediksi skor produktivitas, dan mengelompokkan karyawan
+                    ke dalam segmen yang actionable.
+                </p>
+                <div class="divider"></div>
+                <h2 class="section-title"><i class="bi bi-database-fill"></i> Dataset</h2>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px;">
+                            <div
+                                style="font-size:.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">
+                                Sumber Dataset</div>
+                            <div style="font-weight:700;">Extended Employee Performance &amp; Productivity</div>
+                            <div style="font-size:.82rem; color:var(--text-muted);">Kaggle Public Dataset</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 16px;">
+                            <div
+                                style="font-size:.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">
+                                Ukuran Data</div>
+                            <div style="font-weight:700;">{{ "{:,}".format(total_records) }} baris × 20+ fitur</div>
+                            <div style="font-size:.82rem; color:var(--text-muted);">Train 80% / Test 20%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="card-ai mb-4" data-aos="fade-up" data-aos-delay="60">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-stack"></i> Tech Stack</h2>
+                <div class="row g-3">
+                    {% set stack = [
+                    ('bi-server', '#6366f1', 'Backend', 'Python 3.11, Flask 3.0'),
+                    ('bi-cpu-fill', '#10b981', 'Machine Learning','TensorFlow 2.16, Scikit-Learn 1.4'),
+                    ('bi-palette-fill', '#f59e0b', 'Frontend', 'Bootstrap 5, AOS, Chart.js 4'),
+                    ('bi-cloud-upload-fill','#06b6d4','Deployment', 'Railway (Gunicorn, Nixpacks)'),
+                    ] %}
+                    {% for icon, color, label, value in stack %}
+                    <div class="col-sm-6">
+                        <div
+                            style="display:flex; align-items:center; gap:14px; background: var(--bg-subtle); border-radius: var(--radius-md); padding: 14px 16px;">
+                            <div
+                                style="width:40px; height:40px; border-radius:10px; background: rgba(0,0,0,.05); display:flex; align-items:center; justify-content:center; font-size:1.1rem; color: {{ color | safe }}; flex-shrink:0;">
+                                <i class="bi {{ icon }}"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size:.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px;">
+                                    {{ label }}</div>
+                                <div style="font-size:.88rem; font-weight:600;">{{ value }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Files Table -->
+        <div class="card-ai" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-folder-fill"></i> File Model Terintegrasi</h2>
+                <table class="table-ai">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Tugas</th>
+                            <th>File</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set model_files = [
+                        ('Backpropagation', 'Klasifikasi Resign', 'model_backprop.h5', 'Aktif'),
+                        ('ANN', 'Regresi Produktivitas', 'model_ann.h5', 'Aktif'),
+                        ('RNN', 'Regresi Produktivitas', 'model_rnn.h5', 'Aktif'),
+                        ('Linear Regression','Regresi Baseline', 'model_lr.pkl', 'Aktif'),
+                        ('K-Means', 'Segmentasi Karyawan', 'model_kmeans.pkl', 'Aktif'),
+                        ('Scaler', 'Normalisasi Fitur', 'scaler.joblib', 'Aktif'),
+                        ] %}
+                        {% for m_name, m_task, m_file, m_status in model_files %}
+                        <tr>
+                            <td><strong>{{ m_name }}</strong></td>
+                            <td style="color:var(--text-muted); font-size:.82rem;">{{ m_task }}</td>
+                            <td><code>{{ m_file }}</code></td>
+                            <td><span class="metric-pill metric-best"><i class="bi bi-check2-circle"></i> {{ m_status
+                                    }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ SIDEBAR ══ -->
+    <div class="col-lg-4">
+        <!-- Development Timeline -->
+        <div class="card-ai mb-4" data-aos="fade-up" data-aos-delay="80">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-list-check"></i> Tahapan Pengembangan</h2>
+                <div class="timeline">
+                    {% set phases = [
+                    ('Eksplorasi Data', 'Analisis EDA, penanganan missing value, dan feature engineering pada dataset
+                    karyawan.'),
+                    ('Training Model', 'Pelatihan 5 model ML dengan hyperparameter tuning dan early stopping.'),
+                    ('Evaluasi', 'Pengukuran MAE, RMSE, R-squared, akurasi, dan silhouette score pada test set.'),
+                    ('Backend Flask', 'Integrasi model ke API Flask dengan lazy loading dan error handling.'),
+                    ('Frontend UI', 'Desain responsif Bootstrap 5 + AOS + Chart.js dengan dark mode.'),
+                    ('Deployment', 'Deploy ke Railway dengan Gunicorn dan custom domain .my.id.'),
+                    ] %}
+                    {% for title, body in phases %}
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-title">{{ title }}</div>
+                        <div class="timeline-body">{{ body }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Fitur Utama Checklist -->
+        <div class="card-ai" data-aos="fade-up" data-aos-delay="120">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-patch-check-fill"></i> Fitur Terpenuhi</h2>
+                {% set features = [
+                ('Input data pengguna dengan validasi', True),
+                ('Prediksi real-time (5 model)', True),
+                ('Tampilan hasil + visualisasi', True),
+                ('Confidence / range prediksi', True),
+                ('Loading indicator', True),
+                ('Pesan error informatif', True),
+                ('Halaman perbandingan model', True),
+                ('Grafik interaktif Chart.js', True),
+                ('Dark Mode toggle', True),
+                ('Mobile-friendly responsif', True),
+                ('AOS scroll animations', True),
+                ('Deploy Railway', True),
+                ] %}
+                {% for label, done in features %}
+                <div
+                    style="display:flex; align-items:center; gap:10px; padding: 8px 0; border-bottom: 1px solid var(--border);">
+                    {% if done %}
+                    <i class="bi bi-check-circle-fill"
+                        style="color: var(--success); font-size:1rem; flex-shrink:0;"></i>
+                    {% else %}
+                    <i class="bi bi-x-circle" style="color: var(--danger); font-size:1rem; flex-shrink:0;"></i>
+                    {% endif %}
+                    <span style="font-size:.875rem;">{{ label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

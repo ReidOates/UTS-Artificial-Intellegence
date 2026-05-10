@@ -1,0 +1,354 @@
+{% extends "layout.html" %}
+{% block title %}Prediksi Performa{% endblock %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-up">
+    <div class="page-badge"><i class="bi bi-cpu-fill"></i> AI Inference</div>
+    <h1>Prediksi Performa &amp; Retensi</h1>
+    <p>Masukkan data metrik karyawan — 5 model AI akan menganalisis secara paralel dan memberikan prediksi lengkap.</p>
+</div>
+
+<div class="row g-4">
+    <!-- ══ FORM ══ -->
+    <div class="col-xl-5 col-lg-6" data-aos="fade-up" data-aos-delay="80">
+        <div class="card-ai h-100">
+            <div class="card-body">
+                <h2 class="section-title"><i class="bi bi-pencil-square"></i> Input Data Karyawan</h2>
+
+                <form id="predictForm" novalidate>
+                    <!-- Usia -->
+                    <div class="form-group">
+                        <label class="form-label-ai" for="usia">Usia Karyawan <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="input-icon bi bi-person"></i>
+                            <input type="number" id="usia" name="usia" class="input-ai"
+                                   placeholder="Contoh: 28" min="18" max="65" required>
+                        </div>
+                        <div class="range-labels"><span>18 tahun</span><span>65 tahun</span></div>
+                        <div class="field-error" id="err-usia"></div>
+                    </div>
+
+                    <!-- Gaji -->
+                    <div class="form-group">
+                        <label class="form-label-ai" for="gaji">Gaji (Juta Rupiah) <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="input-icon bi bi-cash-coin"></i>
+                            <input type="number" id="gaji" name="gaji" class="input-ai"
+                                   placeholder="Contoh: 10.5" step="0.1" min="1" max="200" required>
+                        </div>
+                        <div class="range-labels"><span>Rp 1 juta</span><span>Rp 200 juta</span></div>
+                        <div class="field-error" id="err-gaji"></div>
+                    </div>
+
+                    <!-- Jam Kerja -->
+                    <div class="form-group">
+                        <label class="form-label-ai" for="jam_kerja">Jam Kerja / Minggu <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="input-icon bi bi-clock"></i>
+                            <input type="number" id="jam_kerja" name="jam_kerja" class="input-ai"
+                                   placeholder="Contoh: 40" min="1" max="100" required>
+                        </div>
+                        <div class="range-labels"><span>1 jam</span><span>100 jam</span></div>
+                        <div class="field-error" id="err-jam_kerja"></div>
+                    </div>
+
+                    <!-- Masa Kerja -->
+                    <div class="form-group">
+                        <label class="form-label-ai" for="masa_kerja">Masa Kerja (Tahun) <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="input-icon bi bi-calendar2-check"></i>
+                            <input type="number" id="masa_kerja" name="masa_kerja" class="input-ai"
+                                   placeholder="Contoh: 3.5" step="0.1" min="0" max="40" required>
+                        </div>
+                        <div class="range-labels"><span>0 tahun</span><span>40 tahun</span></div>
+                        <div class="field-error" id="err-masa_kerja"></div>
+                    </div>
+
+                    <!-- General error -->
+                    <div id="generalError" class="insight-box danger mb-3" style="display:none;">
+                        <i class="insight-box-icon bi bi-exclamation-triangle-fill"></i>
+                        <div id="generalErrorText" style="font-size:.88rem;"></div>
+                    </div>
+
+                    <button type="submit" class="btn-ai btn-ai-primary w-100" id="submitBtn" style="padding:14px;">
+                        <i class="bi bi-play-fill" id="submitIcon"></i>
+                        <span id="submitText">Jalankan Prediksi AI</span>
+                    </button>
+
+                    <p class="field-hint text-center mt-3">
+                        <i class="bi bi-shield-lock"></i> Data tidak disimpan — diproses secara lokal oleh model.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ RESULT ══ -->
+    <div class="col-xl-7 col-lg-6" data-aos="fade-up" data-aos-delay="160">
+        <div class="card-ai h-100">
+            <div class="card-body d-flex flex-column" style="min-height: 420px;">
+
+                <!-- Empty State -->
+                <div id="emptyState" class="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+                    <div class="empty-state">
+                        <i class="bi bi-cpu"></i>
+                        <h5 style="font-weight:700; color: var(--text-muted); margin-bottom:8px;">Menunggu Analisis AI</h5>
+                        <p>Lengkapi form di samping dan tekan<br><strong>Jalankan Prediksi AI</strong> untuk memulai.</p>
+                    </div>
+                </div>
+
+                <!-- Result Panel -->
+                <div id="resultPanel" class="d-none flex-column" style="gap: 1rem;">
+
+                    <!-- Row 1: Status Retensi & Skor per Model -->
+                    <div class="row g-3" style="margin-bottom: 0;">
+                        <!-- Status Retensi -->
+                        <div class="col-md-6">
+                            <div class="card-ai h-100 result-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <h2 class="section-title" style="font-size:.85rem; margin-bottom:14px;">
+                                            <i class="bi bi-person-bounding-box"></i> Status Retensi
+                                            <span style="font-size:.72rem; color: var(--text-muted); font-weight:500; margin-left:auto;">Backpropagation</span>
+                                        </h2>
+                                    </div>
+                                    <div class="text-center mt-auto">
+                                        <div id="resignBadge" class="result-badge mb-3" style="font-size:1.1rem; padding: 12px 24px;">
+                                            <i class="bi bi-dash-circle"></i> —
+                                        </div>
+                                        <div style="font-size:.82rem; color: var(--text-muted); margin-bottom:8px;">Confidence Level</div>
+                                        <div class="progress-ai"><div class="progress-ai-bar" id="resignBar" style="width:0%;"></div></div>
+                                        <div id="resignConf" style="font-size:1.5rem; font-weight:800; margin-top:8px;">—</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skor per Model -->
+                        <div class="col-md-6">
+                            <div class="card-ai h-100 result-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <h2 class="section-title" style="font-size:.85rem; margin-bottom:14px;">
+                                            <i class="bi bi-bar-chart-fill"></i> Skor per Model
+                                        </h2>
+                                    </div>
+                                    <div class="flex-grow-1 d-flex align-items-center justify-content-center mt-3" style="position: relative; height: 200px;">
+                                        <canvas id="modelCompChart" style="width:100%;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Segmentasi & Produktivitas -->
+                    <div class="row g-3" style="margin-bottom: 0;">
+                        <!-- Segmentasi -->
+                        <div class="col-md-6">
+                            <div class="card-ai h-100 result-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <h2 class="section-title" style="font-size:.85rem; margin-bottom:14px;">
+                                            <i class="bi bi-diagram-3-fill"></i> Segmentasi
+                                            <span style="font-size:.72rem; color: var(--text-muted); font-weight:500; margin-left:auto;">K-Means</span>
+                                        </h2>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3 mt-auto">
+                                        <div id="clusterIcon" style="width:48px; height:48px; border-radius:50%; background: rgba(99,102,241,.12); display:flex; align-items:center; justify-content:center; font-size:1.4rem; color: var(--primary); flex-shrink:0;">
+                                            <i class="bi bi-people-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div id="clusterName" class="badge-cluster" style="font-size:.9rem; padding:6px 16px;">—</div>
+                                            <div style="font-size:.78rem; color: var(--text-muted); margin-top:4px;" id="clusterDesc">Menunggu hasil…</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Produktivitas -->
+                        <div class="col-md-6">
+                            <div class="card-ai h-100 result-card">
+                                <div class="card-body d-flex flex-column">
+                                    <div>
+                                        <h2 class="section-title" style="font-size:.85rem; margin-bottom:14px;">
+                                            <i class="bi bi-graph-up-arrow"></i> Produktivitas
+                                            <span style="font-size:.72rem; color: var(--text-muted); font-weight:500; margin-left:auto;">Ensemble</span>
+                                        </h2>
+                                    </div>
+                                    <div class="text-center mt-auto">
+                                        <div id="prodScore" style="font-size:3rem; font-weight:800; color: var(--success); line-height:1;">—</div>
+                                        <div style="font-size:.82rem; color: var(--text-muted); margin: 6px 0 10px;">skor produktivitas</div>
+                                        <div class="progress-ai"><div class="progress-ai-bar" id="prodBar" style="width:0%; background: linear-gradient(90deg,#10b981,#06b6d4);"></div></div>
+                                        <div style="font-size:.8rem; color: var(--text-muted); margin-top:8px;">
+                                            Range: <strong id="prodRange">—</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Insight AI -->
+                    <div class="row g-0" style="margin-bottom: 0;">
+                        <div class="col-12">
+                            <div id="insightBox" class="insight-box">
+                                <i class="insight-box-icon bi bi-lightbulb-fill"></i>
+                                <div>
+                                    <strong style="font-size:.85rem;">Insight AI</strong>
+                                    <p id="insightText" style="font-size:.88rem; margin-top:4px; margin-bottom:0;">—</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Per-model chart instance
+let modelChartInst = null;
+
+document.getElementById('predictForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // ── Clear previous errors ──
+    document.querySelectorAll('.field-error').forEach(el => { el.textContent=''; el.classList.remove('show'); });
+    document.querySelectorAll('.input-ai').forEach(el => el.classList.remove('is-error'));
+    document.getElementById('generalError').style.display = 'none';
+
+    // ── Loading state ──
+    const btn     = document.getElementById('submitBtn');
+    const btnIcon = document.getElementById('submitIcon');
+    const btnText = document.getElementById('submitText');
+    btn.disabled = true;
+    btnIcon.className = '';
+    btnIcon.innerHTML = '<span class="spinner-ai"></span>';
+    btnText.textContent = 'AI sedang memproses…';
+
+    try {
+        const res  = await fetch('/predict', { method:'POST', body: new FormData(this) });
+        const json = await res.json();
+
+        if (res.status === 422 && json.errors) {
+            // Field-level validation errors
+            Object.entries(json.errors).forEach(([field, msg]) => {
+                const errEl = document.getElementById('err-' + field);
+                const inpEl = document.getElementById(field);
+                if (errEl) { errEl.textContent = msg; errEl.classList.add('show'); }
+                if (inpEl)   inpEl.classList.add('is-error');
+            });
+        } else if (!json.success) {
+            const errBox = document.getElementById('generalError');
+            document.getElementById('generalErrorText').textContent = json.error || 'Terjadi kesalahan pada server.';
+            errBox.style.display = 'flex';
+        } else {
+            renderResults(json.data);
+        }
+    } catch(err) {
+        const errBox = document.getElementById('generalError');
+        document.getElementById('generalErrorText').textContent = 'Gagal terhubung ke server. Periksa koneksi Anda.';
+        errBox.style.display = 'flex';
+    } finally {
+        btn.disabled = false;
+        btnIcon.innerHTML = '';
+        btnIcon.className = 'bi bi-play-fill';
+        btnText.textContent = 'Jalankan Prediksi AI';
+    }
+});
+
+function renderResults(d) {
+    // Show result, hide empty
+    document.getElementById('emptyState').classList.add('d-none');
+    document.getElementById('resultPanel').classList.remove('d-none');
+    document.getElementById('resultPanel').classList.add('d-flex');
+
+    // ── Resign ──
+    const badge = document.getElementById('resignBadge');
+    const isResign = d.resign_status === 'Akan Resign';
+    badge.className = 'result-badge mb-3 ' + (isResign ? 'badge-resign' : 'badge-bertahan');
+    badge.innerHTML = (isResign
+        ? '<i class="bi bi-exclamation-triangle-fill"></i> Akan Resign'
+        : '<i class="bi bi-check-circle-fill"></i> Tetap Bertahan');
+    document.getElementById('resignConf').textContent = d.resign_confidence + '%';
+    setTimeout(() => {
+        document.getElementById('resignBar').style.width = d.resign_confidence + '%';
+        if (isResign) document.getElementById('resignBar').style.background = 'linear-gradient(90deg,#ef4444,#f59e0b)';
+        else           document.getElementById('resignBar').style.background = 'linear-gradient(90deg,#10b981,#06b6d4)';
+    }, 100);
+
+    // ── Productivity (animated counter) ──
+    const prodEl  = document.getElementById('prodScore');
+    const target  = d.prod_avg;
+    let current   = 0;
+    const tick = setInterval(() => {
+        current = Math.min(current + target / 30, target);
+        prodEl.textContent = Math.round(current) + '%';
+        if (current >= target) clearInterval(tick);
+    }, 25);
+    document.getElementById('prodRange').textContent = d.productivity_range;
+    setTimeout(() => { document.getElementById('prodBar').style.width = target + '%'; }, 100);
+
+    // ── Cluster ──
+    const clusterColors = {0: '#10b981', 1: '#6366f1', 2: '#ef4444'};
+    const clusterDescs  = {
+        0: 'Performa di atas rata-rata — kandidat promosi.',
+        1: 'Performa cukup — berpotensi berkembang.',
+        2: 'Risiko tinggi — butuh intervensi manajemen.'
+    };
+    document.getElementById('clusterName').textContent = d.cluster_name;
+    document.getElementById('clusterDesc').textContent = clusterDescs[d.cluster] || '';
+    document.getElementById('clusterIcon').style.background = 'rgba(' + hexToRgb(clusterColors[d.cluster]) + ',.12)';
+    document.getElementById('clusterIcon').style.color = clusterColors[d.cluster];
+
+    // ── Insight ──
+    const box = document.getElementById('insightBox');
+    box.className = 'insight-box ' + (isResign ? 'danger' : 'success');
+    document.getElementById('insightText').textContent = d.insight;
+
+    // ── Per-model Bar Chart ──
+    const isDark  = document.documentElement.getAttribute('data-theme') === 'dark';
+    const txtCol  = isDark ? '#8b949e' : '#64748b';
+    const gridCol = isDark ? '#30363d' : '#e2e8f0';
+
+    if (modelChartInst) modelChartInst.destroy();
+    const ctx = document.getElementById('modelCompChart').getContext('2d');
+    modelChartInst = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['LR', 'ANN', 'RNN'],
+            datasets: [{
+                label: 'Skor Produktivitas',
+                data: [d.prod_lr, d.prod_ann, d.prod_rnn],
+                backgroundColor: ['rgba(99,102,241,.75)', 'rgba(16,185,129,.75)', 'rgba(6,182,212,.75)'],
+                borderRadius: 6,
+                borderSkipped: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + '%' } }
+            },
+            scales: {
+                y: { beginAtZero: true, max: 100, ticks: { color: txtCol, callback: v => v+'%' }, grid: { color: gridCol } },
+                x: { ticks: { color: txtCol }, grid: { display: false } }
+            }
+        }
+    });
+}
+
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return r+','+g+','+b;
+}
+</script>
+{% endblock %}
