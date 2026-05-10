@@ -1,3 +1,12 @@
+---
+title: UTS Artificial Intelligence
+emoji: 🚀
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # Informatics Employee AI Dashboard 🚀
 
 Proyek ini adalah aplikasi web berbasis Flask yang dikembangkan untuk memenuhi tugas UTS Artificial Intelligence. Aplikasi ini berfungsi untuk memprediksi performa karyawan dan segmentasi data menggunakan berbagai model Machine Learning dan Deep Learning.
