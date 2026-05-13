@@ -27,7 +27,11 @@ def _count_dataset_rows(path):
     except Exception:
         return 0
 
+DEFAULT_DATASET_ROWS = 100_000
 DATA_ROWS = _count_dataset_rows(DATA_PATH)
+if DATA_ROWS == 0:
+    print(f"Warning: dataset not found at {DATA_PATH}. Defaulting total_records to {DEFAULT_DATASET_ROWS}.")
+    DATA_ROWS = DEFAULT_DATASET_ROWS
 
 
 def _load_keras(key, filename):
