@@ -38,8 +38,8 @@ venv/
 
 # Data and Models (Optional: ignore if too large)
 data/*.csv
-# models/*.h5
-# models/*.pkl
+models/*.h5
+models/*.pkl
 # models/*.joblib
 
 # OS files
