@@ -48,22 +48,38 @@
         </div>
 
         <!-- Tech Stack -->
+        <style>
+            .stack-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, .05);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                flex-shrink: 0;
+            }
+            .stack-violet { color: #6366f1; }
+            .stack-green { color: #10b981; }
+            .stack-yellow { color: #f59e0b; }
+            .stack-teal { color: #06b6d4; }
+        </style>
         <div class="card-ai mb-4" data-aos="fade-up" data-aos-delay="60">
             <div class="card-body">
                 <h2 class="section-title"><i class="bi bi-stack"></i> Tech Stack</h2>
                 <div class="row g-3">
                     {% set stack = [
-                    ('bi-server', '#6366f1', 'Backend', 'Python 3.11, Flask 3.0'),
-                    ('bi-cpu-fill', '#10b981', 'Machine Learning','TensorFlow 2.16, Scikit-Learn 1.4'),
-                    ('bi-palette-fill', '#f59e0b', 'Frontend', 'Bootstrap 5, AOS, Chart.js 4'),
-                    ('bi-cloud-upload-fill','#06b6d4','Deployment', 'Railway (Gunicorn, Nixpacks)'),
+                    ('bi-server', 'stack-violet', 'Backend', 'Python 3.11, Flask 3.0'),
+                    ('bi-cpu-fill', 'stack-green', 'Machine Learning', 'TensorFlow 2.16, Scikit-Learn 1.4'),
+                    ('bi-palette-fill', 'stack-yellow', 'Frontend', 'Bootstrap 5, AOS, Chart.js 4'),
+                    ('bi-cloud-upload-fill', 'stack-teal', 'Deployment', 'Railway (Gunicorn, Nixpacks)'),
                     ] %}
                     {% for icon, color, label, value in stack %}
                     <div class="col-sm-6">
                         <div
                             style="display:flex; align-items:center; gap:14px; background: var(--bg-subtle); border-radius: var(--radius-md); padding: 14px 16px;">
-                            <div
-                                style="width:40px; height:40px; border-radius:10px; background: rgba(0,0,0,.05); display:flex; align-items:center; justify-content:center; font-size:1.1rem; color: {{ color | safe }}; flex-shrink:0;">
+                            <div class="stack-icon {{ color }}">
                                 <i class="bi {{ icon }}"></i>
                             </div>
                             <div>
