@@ -28,10 +28,15 @@ def _count_dataset_rows(path):
         return 0
 
 DEFAULT_DATASET_ROWS = 100_000
-DATA_ROWS = _count_dataset_rows(DATA_PATH)
-if DATA_ROWS == 0:
-    print(f"Warning: dataset not found at {DATA_PATH}. Defaulting total_records to {DEFAULT_DATASET_ROWS}.")
-    DATA_ROWS = DEFAULT_DATASET_ROWS
+
+def _get_data_rows():
+    rows = _count_dataset_rows(DATA_PATH)
+    if rows == 0:
+        print(f"Warning: dataset not found at {DATA_PATH}. Defaulting total_records to {DEFAULT_DATASET_ROWS}.")
+        return DEFAULT_DATASET_ROWS
+    return rows
+
+DATA_ROWS = _get_data_rows()
 
 
 def _load_keras(key, filename):
@@ -112,7 +117,7 @@ def _generate_insight(resign_status, usia, gaji, jam_kerja, masa_kerja, cluster)
 # ─── Routes ──────────────────────────────────────────────────────────────────
 @app.route('/')
 def index():
-    return render_template('index.html', total_records=DATA_ROWS)
+    return render_template('index.html', total_records=_get_data_rows())
 
 
 @app.route('/predict', methods=['GET', 'POST'])
